@@ -1,0 +1,114 @@
+<!--
+file: index.html
+GUI Assignment: HW4 part 1 jquery validation
+Jasmeet Kaur, UMass Lowell Computer Science, jasmeet_kaur@student.uml.edu
+Copyright (c) 2024 by Jasmeet. All rights reserved. May be freely copied or
+excerpted for educational purposes with credit to the author.
+-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dynamic Multiplication Table</title>
+    <link rel="stylesheet" href="styles.css">
+    <!--jqury validation-->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/jquery.validation/1.19.3/jquery.validate.min.js"></script>
+</head>
+<body>
+    <h1>Interactive Dynamic Table</h1>
+    <p>Please enter your ranges below. Negative numbers are acceptable too!</p>
+    <form id="multiplicationForm">
+        <label for="startHorizontal">Start of horizontal here:</label>
+        <input type="number" id="startHorizontal" name="startHorizontal" required>
+        <label for="endHorizontal">End of horizontal here:</label>
+        <input type="number" id="endHorizontal" name="endHorizontal" required>
+        <label for="startVertical">Start of vertical here:</label>
+        <input type="number" id="startVertical" name="startVertical" required>
+        <label for="endVertical">End of vertical here:</label>
+        <input type="number" id="endVertical" name="endVertical" required>
+        <div class="button-container">
+            <button type="submit">Generate Table!</button>
+        </div>
+    </form>
+    <div id="error-message" class="error"></div>
+    <div class="table-container">
+        <div class="table-wrapper">
+            <table id="multiplicationTable"></table>
+        </div>
+    </div>
+    <script src="script.js"></script>
+    <script>
+        $(document).ready(function () 
+        {
+            $.validator.addMethod("greaterThan", function (value, element, params) 
+            {
+                return this.optional(element) || parseInt(value) >= parseInt($(params).val());
+            }, "The end value must be greater than or equal to the start value.");
+
+            $("#multiplicationForm").validate(
+            {
+                rules: 
+                {
+                    startHorizontal: 
+                    {
+                        required: true,
+                        number: true
+                    },
+                    endHorizontal: 
+                    {
+                        required: true,
+                        number: true,
+                        greaterThan: "#startHorizontal"
+                    },
+                    startVertical: 
+                    {
+                        required: true,
+                        number: true
+                    },
+                    endVertical: 
+                    {
+                        required: true,
+                        number: true,
+                        greaterThan: "#startVertical"
+                    }
+                },
+                messages: 
+                {
+                    startHorizontal: 
+                    {
+                        required: "Please enter the start of the horizontal range.",
+                        number: "Please enter a valid number."
+                    },
+                    endHorizontal: 
+                    {
+                        required: "Please enter the end of the horizontal range.",
+                        number: "Please enter a valid number.",
+                        greaterThan: "The end value must be greater than or equal to the start value."
+                    },
+                    startVertical: 
+                    {
+                        required: "Please enter the start of the vertical range.",
+                        number: "Please enter a valid number."
+                    },
+                    endVertical: 
+                    {
+                        required: "Please enter the end of the vertical range.",
+                        number: "Please enter a valid number.",
+                        greaterThan: "The end value must be greater than or equal to the start value."
+                    }
+                },
+                errorPlacement: function (error, element)
+                {
+                    error.appendTo("#error-message");
+                },
+                submitHandler: function (form) 
+                {
+                    generateTable();
+                }
+            });
+        });
+    </script>
+</body>
+</html>
